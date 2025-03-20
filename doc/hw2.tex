@@ -1,0 +1,63 @@
+% This is a test file for latex
+% 保存为 test-chinese.tex
+% 使用 XeLaTeX 或 LuaLaTeX 编译
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}   % 数学公式
+\usepackage{booktabs}  % 三线表
+\usepackage{geometry}  % 页面设置
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\begin{document}
+
+\title{中文 LaTeX 编译测试文档}
+\author{测试员}
+\date{\today}
+\maketitle
+
+\section{公式测试}
+
+以下是爱因斯坦质能方程：
+\begin{equation}
+E = mc^2
+\end{equation}
+
+分情况讨论公式示例：
+$$
+f(x) = 
+\begin{cases}
+\frac{\sin x}{x}, & x \neq 0 \\
+1,              & x = 0
+\end{cases}
+$$
+
+多行对齐公式：
+\begin{align}
+(a + b)^2 &= a^2 + 2ab + b^2 \label{eq1} \\
+(a - b)^2 &= a^2 - 2ab + b^2 \label{eq2}
+\end{align}
+
+\section{表格测试}
+
+\begin{table}[htbp]
+\centering
+\caption{学生成绩表}
+\begin{tabular}{cccc}
+\toprule
+姓名   & 数学 & 物理 & 总成绩 \\
+\midrule
+张三 & 85  & 90  & 175   \\
+李四 & 92  & 88  & 180   \\
+王五 & 78  & 95  & 173   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{中文排版测试}
+
+\subsection{标点符号测试}
+中文引号测试：「你好，世界！」、“这是双引号”。破折号测试——这是一个破折号。
+
+\subsection{混合排版测试}
+当我们在讨论 $\lim_{x \to 0} \frac{\sin x}{x} = 1$ 时，需要注意中文与公式的混合排版效果。
+
+\end{document}

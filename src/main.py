@@ -37,13 +37,10 @@ for idx, diff_func in enumerate(du_diff_funcs, 1):
     for u_func, exact_du, label in du_tests:
         errors = []
         for h in h_values:
-            try:
-                d_approx = diff_func(u_func, x, h)
-            except:
-                d_approx = diff_func(u_func, x + h, h)  # 处理diff2在x=0处的边界情况
+            d_approx = diff_func(u_func, x, h)
             d_exact = exact_du(x)
             error = abs(d_approx - d_exact)
-            errors.append(error if error != 0 else 1e-16)  # 避免零误差
+            errors.append(error)  
         
         # 计算收敛阶
         log_h = np.log(h_values)
@@ -60,7 +57,12 @@ for idx, diff_func in enumerate(du_diff_funcs, 1):
 
 # 二阶导数差分格式验证
 d2u_diff_funcs = [diff3, diff4]
-d2u_tests = du_tests.copy()  # 复制一阶导数测试用例
+d2u_tests = [
+    (f1, d2f1, '线性函数 $f_1=2x+1$'),  
+    (f2, d2f2, '二次函数 $f_2=3x^2+2x+1$'),
+    (f3, d2f3, '三次函数 $f_3=x^3-2x^2+3x+1$'),
+    (lambda x: g(k, x), lambda x: d2g(k, x), '三角函数 $sin(kx)$')
+]
 
 plt.figure(figsize=(12, 8))
 for idx, diff_func in enumerate(d2u_diff_funcs, 1):
@@ -68,13 +70,10 @@ for idx, diff_func in enumerate(d2u_diff_funcs, 1):
     for u_func, exact_d2u, label in d2u_tests:
         errors = []
         for h in h_values:
-            try:
-                d2_approx = diff_func(u_func, x, h)
-            except:
-                d2_approx = diff_func(u_func, x + h, h)  # 处理边界情况
+            d2_approx = diff_func(u_func, x, h)
             d2_exact = exact_d2u(x)
             error = abs(d2_approx - d2_exact)
-            errors.append(error if error != 0 else 1e-16)
+            errors.append(error)
         
         # 计算收敛阶
         log_h = np.log(h_values)

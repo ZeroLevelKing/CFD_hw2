@@ -1,19 +1,34 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from func import diff1, diff2, diff3, diff4,f1,f2,f3,df1,df2,df3,d2f1,d2f2,d2f3,g,dg,d2g
+import matplotlib
 
-# 定义不同步长用于验证
+# 设置全局中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei']  
+
+# 调整默认布局参数防止标签重叠
+plt.rcParams.update({
+    'figure.autolayout': True,    # 自动调整布局
+    'figure.titlesize': 14,       # 总标题大小
+    'axes.labelsize': 12,         # 坐标轴标签大小
+    'legend.fontsize': 10,        # 图例字体大小
+    'xtick.labelsize': 10,        # X轴刻度标签
+    'ytick.labelsize': 10         # Y轴刻度标签
+})
+
+
+# 定义不同步长
 h_values = [0.1 / (2**i) for i in range(5)]  # [0.1, 0.05, 0.025, 0.0125, 0.00625]
-x = 1.0  # 统一的测试点
-k = 1.0  # 三角函数的波数
+x = 1.0  # 测试点
+k = 1.0  
 
 # 一阶导数差分格式验证
 du_diff_funcs = [diff1, diff2]
 du_tests = [
-    (f1, df1, '线性函数 f1=2x+1'),
-    (f2, df2, '二次函数 f2=3x²+2x+1'),
-    (f3, df3, '三次函数 f3=x³-2x²+3x+1'),
-    (lambda x: g(k, x), lambda x: dg(k, x), '三角函数 sin(kx)')
+    (f1, df1, '线性函数 $f_1=2x+1$'),
+    (f2, df2, '二次函数 $f_2=3x^2+2x+1$'),
+    (f3, df3, '三次函数 $f_3=x^3-2x^2+3x+1$'),
+    (lambda x: g(k, x), lambda x: dg(k, x), '三角函数 $sin(kx)$')
 ]
 
 plt.figure(figsize=(12, 8))
@@ -45,12 +60,7 @@ for idx, diff_func in enumerate(du_diff_funcs, 1):
 
 # 二阶导数差分格式验证
 d2u_diff_funcs = [diff3, diff4]
-d2u_tests = [
-    (f1, d2f1, '线性函数 f1=2x+1'),
-    (f2, d2f2, '二次函数 f2=3x²+2x+1'),
-    (f3, d2f3, '三次函数 f3=x³-2x²+3x+1'),
-    (lambda x: g(1, x), lambda x: d2g(1, x), '三角函数 sin(x)')
-]
+d2u_tests = du_tests.copy()  # 复制一阶导数测试用例
 
 plt.figure(figsize=(12, 8))
 for idx, diff_func in enumerate(d2u_diff_funcs, 1):

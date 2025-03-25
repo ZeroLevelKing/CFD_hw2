@@ -1,12 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from func import diff1, diff2, diff3, diff4,f1,f2,f3,df1,df2,df3,d2f1,d2f2,d2f3,g,dg,d2g
+from func import diff1, diff2, diff3, diff4, f1, f2, f3, df1, df2, df3, d2f1, d2f2, d2f3, g, dg, d2g
 import matplotlib
 
 # 设置全局中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']  
-
-# 调整默认布局参数防止标签重叠
 plt.rcParams.update({
     'figure.autolayout': True,    # 自动调整布局
     'figure.titlesize': 14,       # 总标题大小
@@ -16,9 +14,16 @@ plt.rcParams.update({
     'ytick.labelsize': 10         # Y轴刻度标签
 })
 
+# 定义每个差分方法的独立步长列表
+h_values_config = {
+    # 一阶导数方法
+    diff1: [1 / 2**i for i in range(1, 10)],   
+    diff2: [10 / 1.5**i for i in range(1, 10)],  
+    # 二阶导数方法
+    diff3: [1 / 2**i for i in range(1, 8)],   
+    diff4: [1 / 2**i for i in range(1, 8)]   
+}
 
-# 定义不同步长
-h_values = [0.1 / (2**i) for i in range(5)]  # [0.1, 0.05, 0.025, 0.0125, 0.00625]
 x = 1.0  # 测试点
 k = 1.0  
 
@@ -34,13 +39,14 @@ du_tests = [
 plt.figure(figsize=(12, 8))
 for idx, diff_func in enumerate(du_diff_funcs, 1):
     plt.subplot(2, 2, idx)
+    h_values = h_values_config[diff_func]  # 获取当前方法的步长列表
     for u_func, exact_du, label in du_tests:
         errors = []
         for h in h_values:
             d_approx = diff_func(u_func, x, h)
             d_exact = exact_du(x)
             error = abs(d_approx - d_exact)
-            errors.append(error)  
+            errors.append(error if error > 1e-14 else 1e-14)
         
         # 计算收敛阶
         log_h = np.log(h_values)
@@ -58,8 +64,6 @@ for idx, diff_func in enumerate(du_diff_funcs, 1):
 # 二阶导数差分格式验证
 d2u_diff_funcs = [diff3, diff4]
 d2u_tests = [
-    (f1, d2f1, '线性函数 $f_1=2x+1$'),  
-    (f2, d2f2, '二次函数 $f_2=3x^2+2x+1$'),
     (f3, d2f3, '三次函数 $f_3=x^3-2x^2+3x+1$'),
     (lambda x: g(k, x), lambda x: d2g(k, x), '三角函数 $sin(kx)$')
 ]
@@ -67,13 +71,14 @@ d2u_tests = [
 plt.figure(figsize=(12, 8))
 for idx, diff_func in enumerate(d2u_diff_funcs, 1):
     plt.subplot(2, 2, idx)
+    h_values = h_values_config[diff_func]  # 获取当前方法的步长列表
     for u_func, exact_d2u, label in d2u_tests:
         errors = []
         for h in h_values:
             d2_approx = diff_func(u_func, x, h)
             d2_exact = exact_d2u(x)
             error = abs(d2_approx - d2_exact)
-            errors.append(error)
+            errors.append(error if error > 1e-14 else 1e-14)
         
         # 计算收敛阶
         log_h = np.log(h_values)

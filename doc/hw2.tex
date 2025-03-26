@@ -1,8 +1,11 @@
 \documentclass[UTF8]{ctexart}
-\usepackage{amsmath}   % 数学公式
-\usepackage{booktabs}  % 三线表
-\usepackage{geometry}  % 页面设置
+\usepackage{amsmath}   
+\usepackage{booktabs}  
+\usepackage{geometry}  
 \usepackage{hyperref}
+\usepackage{graphicx} 
+\usepackage{float}
+\graphicspath{{figure/}} % 指定放置图片的子文件夹路径
 \geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
 
 \begin{document}
@@ -84,7 +87,35 @@
 \begin{equation}
     \frac{\partial u}{\partial x} = \frac{-2u_{i-1}-3u_i + 6u_{i+1} - u_{i+2}}{6\Delta x} 
 \end{equation}
-同理，将右侧展开后观察阶数可以得知该格式为三阶格式。
+为了分析差分格式$\frac{\partial u}{\partial x} = \frac{-2u_{i-1} - 3u_i + 6u_{i+1} - u_{i+2}}{6\Delta x}$的截断误差阶数，我们使用泰勒展开法，将各节点值在$u_i$处展开：
+$$
+\begin{aligned}
+u_{i-1} &= u_i - \Delta x \frac{\partial u}{\partial x}\bigg|_i + \frac{\Delta x^2}{2} \frac{\partial^2 u}{\partial x^2}\bigg|_i - \frac{\Delta x^3}{6} \frac{\partial^3 u}{\partial x^3}\bigg|_i + \frac{\Delta x^4}{24} \frac{\partial^4 u}{\partial x^4}\bigg|_i + O(\Delta x^5), \\
+u_{i+1} &= u_i + \Delta x \frac{\partial u}{\partial x}\bigg|_i + \frac{\Delta x^2}{2} \frac{\partial^2 u}{\partial x^2}\bigg|_i + \frac{\Delta x^3}{6} \frac{\partial^3 u}{\partial x^3}\bigg|_i + \frac{\Delta x^4}{24} \frac{\partial^4 u}{\partial x^4}\bigg|_i + O(\Delta x^5), \\
+u_{i+2} &= u_i + 2\Delta x \frac{\partial u}{\partial x}\bigg|_i + 2\Delta x^2 \frac{\partial^2 u}{\partial x^2}\bigg|_i + \frac{4\Delta x^3}{3} \frac{\partial^3 u}{\partial x^3}\bigg|_i + \frac{2\Delta x^4}{3} \frac{\partial^4 u}{\partial x^4}\bigg|_i + O(\Delta x^5).
+\end{aligned}
+$$
+代入分子表达式并合并同类项：
+$$
+\begin{aligned}
+-2u_{i-1} &= -2u_i + 2\Delta x \frac{\partial u}{\partial x}\bigg|_i - \Delta x^2 \frac{\partial^2 u}{\partial x^2}\bigg|_i + \frac{\Delta x^3}{3} \frac{\partial^3 u}{\partial x^3}\bigg|_i - \frac{\Delta x^4}{12} \frac{\partial^4 u}{\partial x^4}\bigg|_i + \cdots, \\
+6u_{i+1} &= 6u_i + 6\Delta x \frac{\partial u}{\partial x}\bigg|_i + 3\Delta x^2 \frac{\partial^2 u}{\partial x^2}\bigg|_i + \Delta x^3 \frac{\partial^3 u}{\partial x^3}\bigg|_i + \frac{\Delta x^4}{4} \frac{\partial^4 u}{\partial x^4}\bigg|_i + \cdots, \\
+-u_{i+2} &= -u_i - 2\Delta x \frac{\partial u}{\partial x}\bigg|_i - 2\Delta x^2 \frac{\partial^2 u}{\partial x^2}\bigg|_i - \frac{4\Delta x^3}{3} \frac{\partial^3 u}{\partial x^3}\bigg|_i - \frac{2\Delta x^4}{3} \frac{\partial^4 u}{\partial x^4}\bigg|_i + \cdots.
+\end{aligned}
+$$
+合并后：
+$$
+\small
+\begin{aligned}
+\text{分子} &= \left(6\Delta x \frac{\partial u}{\partial x}\bigg|_i \right) + \left(-\frac{1}{2}\Delta x^4 \frac{\partial^4 u}{\partial x^4}\bigg|_i \right) + O(\Delta x^5)
+\end{aligned}
+$$
+除以$6\Delta x$后得到：
+$$
+\frac{\partial u}{\partial x}\bigg|_i - \frac{1}{12}\Delta x^3 \frac{\partial^4 u}{\partial x^4}\bigg|_i + O(\Delta x^4)
+$$
+截断误差的主项为$\,-\frac{1}{12}\Delta x^3 \frac{\partial^4 u}{\partial x^4}\bigg|_i$，故截断误差是三阶的。
+
 
 \subsection{对于二阶导数$\frac{\partial^2 u}{\partial x^2}$的差分格式}
 
@@ -187,6 +218,59 @@
     \url{https://github.com/ZeroLevelKing/CFD_hw2.git}
 \end{center}
 git的commit记录如下：
+
 \section{结果讨论和物理解释}
+对于三次函数$f_3(x) = x^3 - 2x^2 + 3x + 1$和三角函数$g(x) = \sin(kx)$（$k = 0.1$），
+对于 $x = 1$ 处的导数和二阶导数，按照上述方法得到的数值解与解析解的误差以及拟合结果如下：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{f1.png} 
+    \caption{差分格式 $\frac{\partial u}{\partial x} = \frac{u_{i+1} - u_i}{\Delta x}$ 的误差与拟合结果}
+    \label{fig:result1} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{f2.png} 
+    \caption{差分格式 $\frac{\partial u}{\partial x} = \frac{-2u_{i-1}-3u_i + 6u_{i+1} - u_{i+2}}{6\Delta x}$  的误差与拟合结果}
+    \label{fig:result2} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{f3.png} 
+    \caption{差分格式 $\frac{\partial^2 u}{\partial x^2} = \frac{u_{i+2} - 2u_{i+1} + u_i}{(\Delta x)^2}$  的误差与拟合结果}
+    \label{fig:result3} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{f4.png} 
+    \caption{差分格式 $\frac{\partial^2 u}{\partial x^2} = \frac{u_{i-1} - 2u_i + u_{i+1}}{\Delta x^2}$  的误差与拟合结果}
+    \label{fig:result4} 
+\end{figure}
+
+\begin{itemize}
+    \item 通过上述结果可以发现，对于第一种差分格式，可以很明显地观察到其误差与步长的一阶关系，
+    \item 而对于第二种差分格式，理论上应该是三阶关系：对于三次函数，其没有截断误差，只有舍入误差，所以误差不随步长变化；对于三角函数，由于机器精度的限制，舍入误差占据主要因素，在步长较短时，几乎不随步长变化，导致斜率接近于0。
+    \item 由图可知，第三种差分格式的收敛阶是1，与理论吻合很好
+    \item 第四种差分格下：三次函数无截断误差，舍入误差占据主要因素，导致斜率接近于0；三角函数的收敛阶是2，与理论吻合很好
+\end{itemize}
+
+对于单精度和双精度对于结果的影响探究如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure_3.png} 
+    \caption{单精度和双精度对于一阶导数差分格式的影响}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure_4.png} 
+    \caption{单精度和双精度对于二阶导数差分格式的影响}
+\end{figure}
+
+\begin{itemize}
+    \item 可以看出，单精度和双精度的区别主要在步长较小时，舍入误差占据主要因素，单精度由于舍入误差更大，会导致结果偏离理论值。
+    \item 而在步长较大时，单精度和双精度的结果几乎没有区别，说明此时的误差主要影响因素是截断误差。
+\end{itemize}
+
 
 \end{document}

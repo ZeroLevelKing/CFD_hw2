@@ -19,7 +19,7 @@ dtype_config = {
     'float': np.float32
 }
 
-# 修改后的差分方法（支持指定精度）
+# 修改后的差分方法，支持不同精度
 def diff_with_precision(diff_func, u_func, x, h, dtype):
     x = dtype(x)
     h = dtype(h)

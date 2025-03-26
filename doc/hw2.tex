@@ -2,6 +2,7 @@
 \usepackage{amsmath}   % 数学公式
 \usepackage{booktabs}  % 三线表
 \usepackage{geometry}  % 页面设置
+\usepackage{hyperref}
 \geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
 
 \begin{document}
@@ -157,8 +158,35 @@
 
 
 \section{代码生成与调试}
-
-
+计算误差 $error$ 的思路为：
+\begin{itemize}
+    \item 定义一个已知解析解的函数，程序中采用的是三次函数$f_3(x) = x^3 - 2x^2 + 3x + 1$和三角函数$g(x) = \sin(kx)$
+    \item 通过数值方法计算出该函数的一阶导数和二阶导数
+    \item 通过解析解计算出该函数的一阶导数和二阶导数
+    \item 计算数值解与解析解的误差
+\end{itemize}
+验证精度的思路为：
+\begin{itemize}
+    \item 通过不同的网格步长，计算出数值解
+    \item 计算出不同网格下的误差
+    \item 根据步长与误差的关系，
+    \begin{equation}
+        error = C \cdot \Delta x^p + O(\Delta x^{p+1}) + e
+    \end{equation}
+    其中，$C$为常数，$p$为阶数,$e$为舍入误差
+    将步长与误差同时取对数，如果舍入误差可以忽略，则可以
+    \begin{equation}
+        \log(error) = \log(C) + p \cdot \log(\Delta x)
+    \end{equation}
+    通过线性拟合函数 $y = kx + b$，可以得到拟合
+    函数的斜率$k$，与理论阶数$p$相比较，可以通过斜率来验证精度
+\end{itemize}
+与此同时，还修改了数据的存储精度，比较了单精度和双精度的计算结果。
+具体的生成与调试参见github仓库：
+\begin{center}
+    \url{https://github.com/ZeroLevelKing/CFD_hw2.git}
+\end{center}
+git的commit记录如下：
 \section{结果讨论和物理解释}
 
 \end{document}

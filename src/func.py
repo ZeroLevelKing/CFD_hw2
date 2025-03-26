@@ -29,22 +29,10 @@ def diff4(u, x, h):
     return (u_1 - 2 * u0 + u1) / (h ** 2)
 
 # 用于测试的多项式函数
-def f1(x):
-    return  2 * x + 1
-def f2(x):
-    return 3 * x ** 2 + 2 * x + 1
 def f3(x):
     return x ** 3 - 2 * x ** 2 + 3 * x + 1
-def df1(x):
-    return 2
-def df2(x):
-    return 6 * x + 2
 def df3(x):
     return 3 * x ** 2 - 4 * x + 3
-def d2f1(x):
-    return 0
-def d2f2(x):
-    return 6
 def d2f3(x):
     return 6 * x - 4
 

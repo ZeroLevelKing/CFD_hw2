@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from func import diff1, diff2, diff3, diff4, f1, f2, f3, df1, df2, df3, d2f1, d2f2, d2f3, g, dg, d2g
+from func import diff1, diff2, diff3, diff4, f3, df3, d2f3, g, dg, d2g
 import matplotlib
 
 # 设置全局中文字体
@@ -18,20 +18,18 @@ plt.rcParams.update({
 h_values_config = {
     # 一阶导数方法
     diff1: [1 / 2**i for i in range(1, 10)],   
-    diff2: [10 / 1.5**i for i in range(1, 10)],  
+    diff2: [1 / 2**i for i in range(5, 15)],  
     # 二阶导数方法
-    diff3: [1 / 2**i for i in range(1, 8)],   
-    diff4: [1 / 2**i for i in range(1, 8)]   
+    diff3: [1 / 2**i for i in range(5, 15)],   
+    diff4: [1 / 2**i for i in range(1, 10)]   
 }
 
 x = 1.0  # 测试点
-k = 1.0  
+k = 0.1 
 
 # 一阶导数差分格式验证
 du_diff_funcs = [diff1, diff2]
 du_tests = [
-    (f1, df1, '线性函数 $f_1=2x+1$'),
-    (f2, df2, '二次函数 $f_2=3x^2+2x+1$'),
     (f3, df3, '三次函数 $f_3=x^3-2x^2+3x+1$'),
     (lambda x: g(k, x), lambda x: dg(k, x), '三角函数 $sin(kx)$')
 ]
